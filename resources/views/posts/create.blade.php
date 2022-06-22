@@ -24,9 +24,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mb-4 card card-primary">
-                            @if(isset($status))
-                                <div class="alert alert-{{ $status ? 'success' : 'danger' }}">
-                                    {{ $message }}
+                            @if(session()->has('status'))
+                                <div class="mb-4 alert alert-{{ session('status') ? 'success' : 'danger' }}">
+                                    {{ session('message') }}
                                 </div>
                             @endif
                             @include('posts.form',[

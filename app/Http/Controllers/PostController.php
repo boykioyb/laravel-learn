@@ -12,12 +12,22 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
 
-    public function list()
+    public function read()
     {
-        $posts = Post::query()->orderBy('created_at', 'DESC')->get();
+        $posts = Post::query()->orderBy('updated_at', 'DESC')->get();
 
         return view('posts.list', [
             'postList' => $posts
+        ]);
+    }
+
+    public function detail($id)
+    {
+        $post = Post::query()->findOrFail($id);
+
+        return view('posts.detail', [
+            'title' => "Xem chi tiết bài viết",
+            'postController' => $post
         ]);
     }
 
@@ -82,6 +92,93 @@ class PostController extends Controller
             return view('post.create', array_merge([
                 'title' => "Thêm mới bài viết"
             ], $result));
+        }
+        return redirect()->route('post.list')->with($result);
+    }
+
+    public function edit($id)
+    {
+        // tìm xem nó có dữ liệu theo id xem có hay không
+        // TH 1
+//        $post = Post::query()->where('id', $id)->first();
+//        $post = Post::query()->find($id);
+//        if (is_null($post)){
+//        if (!$post instanceof Post){
+//            // không có dữ liệu chạy vào đây
+//           abort(404);
+//        }
+        // có dữ liệu chạy xuống đây
+
+//        dump(!'');
+//        dump(!0);
+//        dump(!false);
+//        dump(!null);
+//        die;
+
+        //TH 2
+        $post = Post::query()->findOrFail($id);
+
+        return view('posts.edit', [
+            'title' => "Sửa bài viết",
+            'postController' => $post
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+//        DB::enableQueryLog();
+        $params = $request->only(['id', 'title', 'status', 'content']);
+        // select * from post where id = 1 limit 1
+        // cũ lấy từ trong database
+        // query hit: số lần request vào db
+        $post = Post::query()->findOrFail($params['id']);
+        //C1
+//        dump($post);
+        // xss
+        $params['title'] = strip_tags($params['title']);
+        $params['slug'] = Str::slug($params['title']);
+        $post->fill($params);
+//        dump($post);
+//        die;
+//        $post->save();
+
+//        dd(DB::getQueryLog());
+        // vẫn dữ nguyên về mặt model thay đổi property
+        // C2
+        // update post set ...
+        // update dữ liệu mới từ client gửi lên của post id = 1
+        // response trả về nó là dạng true false
+//        $updated = $post->update($params);
+
+        $result = [
+            "status" => true,
+            "message" => "Thành công"
+        ];
+        if (!$post->save()) {
+            // select * from post where id = 1 limit 1
+//            $post->refresh();
+//            dd(DB::getQueryLog());
+            $result['status'] = false;
+            $result['message'] = "Thất bại";
+            return redirect()->route('post.edit', [
+                'id' => $params['id']
+            ])->with($result);
+        }
+        return redirect()->route('post.list')->with($result);
+
+
+    }
+
+    public function delete($id)
+    {
+        $post = Post::query()->findOrFail($id);
+        $result = [
+            "status" => true,
+            "message" => "Thành công"
+        ];
+        if (!$post->delete()) {
+            $result['status'] = false;
+            $result['message'] = "Thất bại";
         }
         return redirect()->route('post.list')->with($result);
     }

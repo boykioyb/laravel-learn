@@ -29,7 +29,7 @@
 
                     <div class="card-tools">
                         <a href="{{ route('post.create.ui') }}" class="btn btn-info">
-                           Thêm mới
+                            Thêm mới
                         </a>
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -52,16 +52,16 @@
                                 ID
                             </th>
                             <th style="width: 20%">
-                               Tiêu đề
+                                Tiêu đề
                             </th>
                             <th style="width: 30%">
                                 Slug
                             </th>
                             <th>
-                               Trạng thái
+                                Trạng thái
                             </th>
                             <th>
-                               Thời gian tạo
+                                Thời gian tạo
                             </th>
                             <th>
                                 Thời gian cập nhật
@@ -77,10 +77,10 @@
                                     {{ $item->id }}
                                 </td>
                                 <td>
-                                    {{$item->title}}
+                                    {{ $item->title }}
                                 </td>
                                 <td>
-                                    {{$item->slug}}
+                                    {{ $item->slug }}
                                 </td>
                                 <td class="project-state">
                                     @if($item->status == 1)
@@ -103,12 +103,13 @@
                                         </i>
                                         View
                                     </a>
-                                    <a class="btn btn-info btn-sm" href="#">
+                                    <a class="btn btn-info btn-sm" href="{{ route('post.edit',['id' => $item->id]) }}">
                                         <i class="fas fa-pencil-alt">
                                         </i>
                                         Edit
                                     </a>
-                                    <a class="btn btn-danger btn-sm" href="#">
+                                    <a class="btn btn-danger btn-sm"
+                                       href="{{ route('post.delete',['id' => $item->id] ) }}">
                                         <i class="fas fa-trash">
                                         </i>
                                         Delete

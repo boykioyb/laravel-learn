@@ -25,7 +25,15 @@
 
                     <div class="col-md-12">
                         <div class="card card-primary">
-                            @include('posts.form')
+                            @if(session()->has('status'))
+                                <div class="mb-4 alert alert-{{ session('status') ? 'success' : 'danger' }}">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+                            @include('posts.form',[
+                                'postView' => $postController,
+                                'action' => route('post.update')
+                            ])
                         </div>
                     </div>
 
