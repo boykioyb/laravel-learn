@@ -42,3 +42,7 @@ Route::group(['prefix' => 'posts'], function () {
     Route::get('delete/{id}',[\App\Http\Controllers\PostController::class,'delete'])
     ->name('post.delete');
 });
+
+Route::get('login',function (){
+    echo "trang login";
+})->name('login');
