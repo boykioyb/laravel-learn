@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home.dashboard');
 });
+Route::group(['middleware' => 'auth'],function (){
+    Route::get('/dashboard', function () {
+        return view('home.dashboard');
+    })->name('dashboard');
+
+    Route::get('/logout',function (){
+        \Illuminate\Support\Facades\Auth::logout();
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+        return redirect('/login');
+    });
+});
 
 // http://laravel-learn.test/posts
 // http://laravel-learn.test/posts/create
@@ -36,13 +49,22 @@ Route::group(['prefix' => 'posts'], function () {
         ->where('id', '[0-9]+')
         ->name('post.edit');
 
-    Route::post('update', [\App\Http\Controllers\PostController::class,'update'])
-    ->name('post.update');
+    Route::post('update', [\App\Http\Controllers\PostController::class, 'update'])
+        ->name('post.update');
 
-    Route::get('delete/{id}',[\App\Http\Controllers\PostController::class,'delete'])
-    ->name('post.delete');
+    Route::get('delete/{id}', [\App\Http\Controllers\PostController::class, 'delete'])
+        ->name('post.delete');
 });
 
-Route::get('login',function (){
-    echo "trang login";
-})->name('login');
+Route::get('login', function () {
+    return view('auth.login');
+})->name('login')->middleware('guest');
+Route::post('login', [\App\Http\Controllers\UserController::class, 'login'])
+    ->name('login.post');
+
+Route::get('register', function () {
+    return view('auth.register');
+})->name('register')->middleware('guest');
+Route::post('register', [\App\Http\Controllers\UserController::class, 'register'])
+    ->name('register.post');
+
