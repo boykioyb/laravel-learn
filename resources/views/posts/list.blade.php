@@ -45,6 +45,43 @@
                             {{ session('message') }}
                         </div>
                     @endif
+                    <form action="" method="GET" class="p-2">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="">ID</label>
+                                    <input type="text" class="form-control" name="id" value="{{request('id') ?? ''}}"/>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="">Tiêu đề</label>
+                                    <input type="text" class="form-control" name="title"
+                                           value="{{request('title') ?? ''}}"/>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="">Trạng thái</label>
+                                    <select name="status" class="form-control">
+                                        <option value="">---Chọn trạng thái---</option>
+                                        <option
+                                            value="0" {{  request('status') == 0 ? 'selected' : '' }}>
+                                            Thất bại
+                                        </option>
+                                        <option
+                                            value="1" {{  request('status')  == 1 ? 'selected' : '' }}>
+                                            Thành công
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3" style="padding-top: 32px">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                <button type="reset" class="btn btn-default">Làm mới</button>
+                            </div>
+                        </div>
+                    </form>
                     <table class="table table-striped projects">
                         <thead>
                         <tr>
@@ -119,6 +156,8 @@
                         @endforeach
                         </tbody>
                     </table>
+
+                    {{ $postList->links('vendor.pagination.bootstrap-5') }}
                 </div>
                 <!-- /.card-body -->
             </div>

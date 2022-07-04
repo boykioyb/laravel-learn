@@ -12,10 +12,28 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
 
-    public function read()
+    public function read(Request $request)
     {
-        $posts = Post::query()->orderBy('updated_at', 'DESC')->get();
+        $posts = Post::query()
+            ->orderBy('updated_at', 'DESC');
 
+        if ($request->has('id') && !empty($request->get('id'))){
+            $id = $request->get('id');
+            $posts->where('id', '=', $id);
+        }
+
+        if ($request->has('title') && !empty($request->get('title'))){
+            $title = $request->get('title');
+            $posts->where('title', 'like', "%$title%");
+        }
+
+        if ($request->has('status') && strlen($request->get('status')) > 0){
+            $status = $request->get('status');
+            $posts->where('status', '=', $status);
+        }
+//        $posts = $posts->selectRaw('id,title');
+        $posts = $posts->paginate(20);
+//        dd($posts->dd());
         return view('posts.list', [
             'postList' => $posts
         ]);
